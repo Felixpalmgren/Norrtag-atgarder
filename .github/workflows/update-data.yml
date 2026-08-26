@@ -4,21 +4,47 @@ on:
   repository_dispatch:
     types: [update-data]
 
+concurrency:
+  group: update-data
+  cancel-in-progress: true
+
 jobs:
   update:
     runs-on: ubuntu-latest
     steps:
+      - name: Wait for changes to settle
+        run: sleep 60
+
       - uses: actions/checkout@v4
 
+      - name: Check if data actually changed
+        id: check
+        env:
+          PAYLOAD: ${{ toJson(github.event.client_payload) }}
+        run: |
+          echo "$PAYLOAD" | jq -c '.rader' > /tmp/new_rader.json
+          if [ -f data.json ]; then
+            jq -c '.rader' data.json > /tmp/old_rader.json
+          else
+            echo "" > /tmp/old_rader.json
+          fi
+          if diff -q /tmp/new_rader.json /tmp/old_rader.json > /dev/null; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Write data.json
+        if: steps.check.outputs.changed == 'true'
         env:
           PAYLOAD: ${{ toJson(github.event.client_payload) }}
         run: echo "$PAYLOAD" > data.json
 
       - name: Commit and push
+        if: steps.check.outputs.changed == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data.json
-          git diff --staged --quiet || git commit -m "Auto-update data.json"
+          git commit -m "Auto-update data.json"
           git push
