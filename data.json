@@ -1,4 +1,15 @@
 {
-  "uppdaterad": "",
-  "rader": []
+  "uppdaterad": "2026-08-26 11:00",
+  "rader": [
+    {
+      "inkommet": "2026-08-25",
+      "aktivitet": "Trasig dörr vagn 3",
+      "status": "Väntar på reservdel"
+    },
+    {
+      "inkommet": "2026-08-26",
+      "aktivitet": "Toalett ur funktion vagn 1",
+      "status": "Åtgärdad, väntar bekräftelse från verkstad"
+    }
+  ]
 }
