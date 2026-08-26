@@ -1,15 +1,15 @@
 {
   "rader": [
     {
-      "aktivitet": "Urinlukt på toaletter ombord på fordon",
-      "inkommet": "260817",
-      "status": "Sodexo håller på att testa rejälare toalett-städ för att sen se över om extra åtgärder."
-    },
-    {
       "aktivitet": "Lagerkoll",
       "inkommet": "2606",
       "status": "Inväntar utveckling från Reges för att kunna säkerställa att rätt plats används"
+    },
+    {
+      "aktivitet": "Urinlukt på toaletter ombord på fordon",
+      "inkommet": "260817",
+      "status": "Sodexo håller på att testa rejälare toalett-städ för att sen se över om extra åtgärder."
     }
   ],
-  "uppdaterad": "2026-08-26 11:07"
+  "uppdaterad": "2026-08-26 11:08"
 }
