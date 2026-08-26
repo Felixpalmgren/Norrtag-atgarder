@@ -1,10 +1,115 @@
 <!DOCTYPE html>
 <html lang="sv">
 <head>
-  <meta charset="UTF-8">
-  <title>Driftlista</title>
+<meta charset="UTF-8">
+<title>Norrtåg – Åtgärdslista</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #ffffff;
+    color: #1a1a1a;
+    padding: 40px 60px;
+  }
+  h1 {
+    font-size: 44px;
+    margin: 0 0 8px 0;
+    color: #00913f;
+  }
+  .updated {
+    font-size: 20px;
+    color: #555;
+    margin-bottom: 30px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+  th {
+    text-align: left;
+    font-size: 26px;
+    background: #00913f;
+    color: white;
+    padding: 14px 18px;
+  }
+  th:nth-child(1), td:nth-child(1) { width: 15%; }
+  th:nth-child(2), td:nth-child(2) { width: 35%; }
+  th:nth-child(3), td:nth-child(3) { width: 50%; }
+  td {
+    font-size: 26px;
+    padding: 16px 18px;
+    border-bottom: 2px solid #e0e0e0;
+    vertical-align: top;
+  }
+  tr:nth-child(even) td {
+    background: #f7f7f7;
+  }
+  .empty {
+    font-size: 28px;
+    color: #777;
+    padding: 40px 0;
+  }
+</style>
 </head>
 <body>
-  <h1>Laddar data...</h1>
+  <h1>Åtgärdslista – Norrtåg</h1>
+  <div class="updated" id="updated">Laddar...</div>
+  <table id="tbl" style="display:none">
+    <thead>
+      <tr>
+        <th>Inkommet</th>
+        <th>Aktivitet</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody id="rows"></tbody>
+  </table>
+  <div class="empty" id="empty" style="display:none">Inga pågående ärenden just nu.</div>
+
+<script>
+async function loadData() {
+  try {
+    const res = await fetch('./data.json?_=' + Date.now());
+    const data = await res.json();
+
+    document.getElementById('updated').textContent = 'Senast uppdaterad: ' + (data.uppdaterad || '');
+
+    const rows = data.rader || [];
+    const tbody = document.getElementById('rows');
+    const tbl = document.getElementById('tbl');
+    const empty = document.getElementById('empty');
+
+    if (rows.length === 0) {
+      tbl.style.display = 'none';
+      empty.style.display = 'block';
+      return;
+    }
+
+    tbody.innerHTML = rows.map(r => `
+      <tr>
+        <td>${escapeHtml(r.inkommet || '')}</td>
+        <td>${escapeHtml(r.aktivitet || '')}</td>
+        <td>${escapeHtml(r.status || '')}</td>
+      </tr>
+    `).join('');
+
+    tbl.style.display = 'table';
+    empty.style.display = 'none';
+  } catch (e) {
+    document.getElementById('updated').textContent = 'Kunde inte hämta data.';
+  }
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+loadData();
+setInterval(loadData, 30000);
+</script>
 </body>
 </html>
