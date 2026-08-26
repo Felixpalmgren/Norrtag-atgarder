@@ -1,10 +1,10 @@
 {
   "rader": [
     {
-      "Aktivitet": "23123",
-      "Inkommet": null,
-      "Status": "12321"
+      "aktivitet": "Slut på kaffe",
+      "inkommet": "260826",
+      "status": "kokar kaffe"
     }
   ],
-  "uppdaterad": "2026-08-26 10:02"
+  "uppdaterad": "2026-08-26 10:46"
 }
